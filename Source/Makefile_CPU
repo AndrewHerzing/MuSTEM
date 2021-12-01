@@ -1,0 +1,36 @@
+# change this to wherever your FFTW is installed
+FFTW_DIR = /home/aherzing/anaconda3/pkgs/fftw-3.3.10-nompi_h74d3f13_101/
+
+PGF_FLAGS = -c -g -O3 -Mpreprocess -mp -Mbackslash -Mconcur -Mextend -Dsingle_precision -Mfree -Mrecursive -I${FFTW_DIR}include
+FFTW_LIBS = -L${FFTW_DIR}lib -lfftw3f -lfftw3f_threads -lfftw3 -lfftw3_threads
+
+Hn0_tcmp: intermediate
+	# Change this path to control where the executable is written
+	pgf90 -o ../MU_STEM.CPU.out *.o ${FFTW_LIBS}   
+	rm -f *.o *.mod *.tmp *.TMP
+modules:
+	pgf90 $(PGF_FLAGS) quadpack.f90
+	pgf90 $(PGF_FLAGS) mod_CUFFT_wrapper.f90
+	pgf90 $(PGF_FLAGS) m_precision.f90
+	pgf90 $(PGF_FLAGS) m_string.f90
+	pgf90 $(PGF_FLAGS) m_numerical_tools.f90
+	pgf90 $(PGF_FLAGS) mod_global_variables.f90
+	pgf90 $(PGF_FLAGS) m_crystallography.f90
+	pgf90 $(PGF_FLAGS) m_electron.f90
+	pgf90 $(PGF_FLAGS) m_user_input.f90
+	pgf90 $(PGF_FLAGS) mod_output.f90
+	pgf90 $(PGF_FLAGS) m_multislice.f90
+	pgf90 $(PGF_FLAGS) m_lens.f90
+	pgf90 $(PGF_FLAGS) m_tilt.f90
+	pgf90 $(PGF_FLAGS) m_absorption.f90
+	pgf90 $(PGF_FLAGS) m_potential.f90
+	pgf90 $(PGF_FLAGS) MS_utilities.f90
+	pgf90 $(PGF_FLAGS) s_absorptive_stem.f90
+	pgf90 $(PGF_FLAGS) s_qep_tem.f90
+	pgf90 $(PGF_FLAGS) s_qep_stem.f90
+	pgf90 $(PGF_FLAGS) s_absorptive_tem.f90
+	pgf90 $(PGF_FLAGS) muSTEM.f90
+intermediate: *.f90 modules
+	pgf90 $(PGF_FLAGS) *.f90
+clean:
+	rm -f *.o *.mod *.tmp *.TMP *.out

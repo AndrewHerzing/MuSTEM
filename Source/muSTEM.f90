@@ -142,7 +142,7 @@
         ! Set up GPU
         call setup_GPU
 #else
-        open(6,carriagecontrol ='fortran')
+        Open(6)
 #endif
         
         call command_line_title_box('Dataset output')

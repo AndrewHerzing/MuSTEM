@@ -11,3 +11,5 @@ WaasmeierKohl.f90
 *.out
 *.synctex.gz
 *.toc
+*.mod
+*.o
