@@ -1,8 +1,8 @@
 # change this to wherever your FFTW is installed
-FFTW_DIR = /home/aherzing/anaconda3/pkgs/fftw-3.3.10-nompi_h74d3f13_101/
+FFTW_DIR = /usr/lib/x86_64-linux-gnu
 
-PGF_FLAGS = -c -g -O3 -Mpreprocess -mp -Mbackslash -Mconcur -Mextend -Dsingle_precision -Mfree -Mrecursive -I${FFTW_DIR}include
-FFTW_LIBS = -L${FFTW_DIR}lib -lfftw3f -lfftw3f_threads -lfftw3 -lfftw3_threads
+PGF_FLAGS = -c -g -O3 -Mpreprocess -mp -Mbackslash -Mconcur -Mextend -Dsingle_precision -Mfree -Mrecursive -I${FFTW_DIR}
+FFTW_LIBS = -L${FFTW_DIR} -lfftw3f -lfftw3f_threads -lfftw3 -lfftw3_threads
 
 Hn0_tcmp: intermediate
 	# Change this path to control where the executable is written
