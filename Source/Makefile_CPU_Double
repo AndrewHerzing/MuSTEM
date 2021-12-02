@@ -1,10 +1,16 @@
-PGF_FLAGS= -c -g -O3 -Mpreprocess -Mbackslash -Mconcur -Mextend -Mcuda=cuda11.0 -Dsingle_precision -ta=tesla:cuda11.0 -Mfree -Mrecursive -DGPU
+# change this to wherever your FFTW is installed
+FFTW_DIR = /usr/lib/x86_64-linux-gnu
 
-Hn0_tcmp: intermediate 
-	pgf90 -Mcuda=cuda11.0 -ta=tesla:cuda11.0 -o ../MU_STEM.GPU.out *.o -L/usr/local/cuda/lib -lcufft
+PGF_FLAGS = -c -g -O3 -Mpreprocess -mp -Mbackslash -Mconcur -Mextend -Ddouble_precision -Mfree -Mrecursive -I${FFTW_DIR}
+FFTW_LIBS = -L${FFTW_DIR} -lfftw3f -lfftw3f_threads -lfftw3 -lfftw3_threads
+
+Hn0_tcmp: intermediate
+	# Change this path to control where the executable is written
+	pgf90 -o ../MU_STEM.CPU_DOUBLE.out *.o ${FFTW_LIBS}   
 	rm -f *.o *.mod *.tmp *.TMP
 modules:
 	pgf90 $(PGF_FLAGS) quadpack.f90
+	pgf90 $(PGF_FLAGS) mod_CUFFT_wrapper.f90
 	pgf90 $(PGF_FLAGS) m_precision.f90
 	pgf90 $(PGF_FLAGS) m_string.f90
 	pgf90 $(PGF_FLAGS) m_numerical_tools.f90
@@ -12,19 +18,13 @@ modules:
 	pgf90 $(PGF_FLAGS) m_crystallography.f90
 	pgf90 $(PGF_FLAGS) m_electron.f90
 	pgf90 $(PGF_FLAGS) m_user_input.f90
-	pgf90 $(PGF_FLAGS) GPU_routines/mod_cufft.f90
-	pgf90 $(PGF_FLAGS) mod_CUFFT_wrapper.f90
 	pgf90 $(PGF_FLAGS) mod_output.f90
 	pgf90 $(PGF_FLAGS) m_multislice.f90
 	pgf90 $(PGF_FLAGS) m_lens.f90
 	pgf90 $(PGF_FLAGS) m_tilt.f90
 	pgf90 $(PGF_FLAGS) m_absorption.f90
-	pgf90 $(PGF_FLAGS) GPU_routines/mod_cuda_array_library.f90
-	pgf90 $(PGF_FLAGS) GPU_routines/mod_cuda_potential.f90
 	pgf90 $(PGF_FLAGS) m_potential.f90
 	pgf90 $(PGF_FLAGS) MS_utilities.f90
-	pgf90 $(PGF_FLAGS) GPU_routines/mod_cuda_setup.f90
-	pgf90 $(PGF_FLAGS) GPU_routines/mod_cuda_ms.f90
 	pgf90 $(PGF_FLAGS) s_absorptive_stem.f90
 	pgf90 $(PGF_FLAGS) s_qep_tem.f90
 	pgf90 $(PGF_FLAGS) s_qep_stem.f90
@@ -32,6 +32,5 @@ modules:
 	pgf90 $(PGF_FLAGS) muSTEM.f90
 intermediate: *.f90 modules
 	pgf90 $(PGF_FLAGS) *.f90
-	pgf90 $(PGF_FLAGS) GPU_routines/*.f90
 clean:
 	rm -f *.o *.mod *.tmp *.TMP *.out

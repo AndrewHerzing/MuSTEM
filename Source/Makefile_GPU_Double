@@ -1,7 +1,7 @@
-PGF_FLAGS= -c -g -O3 -Mpreprocess -Mbackslash -Mconcur -Mextend -Mcuda=cuda11.0 -Dsingle_precision -ta=tesla:cuda11.0 -Mfree -Mrecursive -DGPU
+PGF_FLAGS= -c -g -O3 -Mpreprocess -Mbackslash -Mconcur -Mextend -Mcuda=cuda11.0 -Ddouble_precision -ta=tesla:cuda11.0 -Mfree -Mrecursive -DGPU
 
 Hn0_tcmp: intermediate 
-	pgf90 -Mcuda=cuda11.0 -ta=tesla:cuda11.0 -o ../MU_STEM.GPU.out *.o -L/usr/local/cuda/lib -lcufft
+	pgf90 -Mcuda=cuda11.0 -ta=tesla:cuda11.0 -o ../MU_STEM.GPU_DOUBLE.out *.o -L/usr/local/cuda/lib -lcufft
 	rm -f *.o *.mod *.tmp *.TMP
 modules:
 	pgf90 $(PGF_FLAGS) quadpack.f90
